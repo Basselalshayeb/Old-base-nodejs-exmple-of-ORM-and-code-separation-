@@ -4,14 +4,14 @@ class Has extends Model { }
 
 module.exports = function (sequelize, User, Folder){
     Has.init({
-        user_id: {
+        userId: {
             type: DataTypes.INTEGER,
             references: {
                 model: User,
                 key: 'id'
             }
         },
-        folder_id: {
+        folderId: {
             type: DataTypes.INTEGER,
             references: {
                 model: Folder,

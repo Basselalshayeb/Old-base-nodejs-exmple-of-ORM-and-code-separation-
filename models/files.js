@@ -7,7 +7,7 @@ module.exports = function (sequelize,Folder) {
     
 File.init({
     // Model attributes are defined here
-    folder_id: {
+    folderId: {
         type: DataTypes.INTEGER,
         references: {
             model: Folder,
