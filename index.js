@@ -8,22 +8,22 @@ const sequelize = new Sequelize('pointoffsy', 'sa', 'sasa', {
     dialect: 'mysql',
     logging: (...msg) => console.log(msg)
 });
+let formidable = require('formidable');
+let fs = require('fs');
 
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
 
-// testing sequalizer
-// require('./testing_seq')(sequelize);
 
 // define models Todo: move them in separete file
 var User = require('./models/users')(sequelize);
 var Folder = require('./models/folders')(sequelize);
 var File = require('./models/files')(sequelize, Folder);
 var Has = require('./models/has')(sequelize, User, Folder);
-Folder.belongsToMany(User, { through: 'Has' });
-User.belongsToMany(Folder, { through: 'Has' });
+Folder.belongsToMany(User, { through: 'Has', onDelete: 'CASCADE' });
+User.belongsToMany(Folder, { through: 'Has', onDelete: 'CASCADE' });
 File.belongsTo(Folder);
 Folder.hasMany(File);
 /*(async () => {
@@ -38,9 +38,9 @@ Folder.hasMany(File);
 
 // Routes
 // Folder routes
-require('./api/folder/folder')(app,User,Folder,File);
+require('./api/folder/folder')(app, User, Folder, File, Has);
 // File routes
-require('./api/file/file')(app,User,Folder,File);
+require('./api/file/file')(app, User, Folder, File, fs, formidable);
 
 
-http.createServer(app).listen(80,() => {console.log('server is working')});
+http.createServer(app).listen(80, () => { console.log('server is working') });

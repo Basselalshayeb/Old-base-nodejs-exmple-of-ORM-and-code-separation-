@@ -1,5 +1,5 @@
 
-module.exports = function (app, User, Folder, File) {
+module.exports = function (app, User, Folder, File, Has) {
     /**
      * @param user_id
      * @param page
@@ -34,9 +34,14 @@ module.exports = function (app, User, Folder, File) {
             });
     })
 
+    /**
+     * delete folder with cascade
+     * @param folderId
+     * @param userId
+     * @return response
+     */
     app.delete('/Folder', (req, res) => {
         let folderId = req.query.folderId;
-
         Folder.findByPk(folderId).then(folder => {
 
             File.count({
@@ -71,9 +76,44 @@ module.exports = function (app, User, Folder, File) {
 
     });
 
+    /**
+     * post new folder 
+     * @param name
+     * @return results
+     */
     app.post('/Folder', (req, res) => {
         // get folder data
         let folderName = req.body.name;
-        console.log();
+        let userId = req.body.userId;
+        User.findByPk(userId).then(user => {
+            // create the folder 
+            Folder.create({ name: folderName }).then(folder => {
+                // create the Has association
+
+                folder.setUsers([user]).then(has => {
+                    res.send({ status: 'success' })
+                })
+
+            });
+        });
+
+    });
+
+    /**
+     * get search for folder or file 
+     * @folderId
+     * @response with all files
+     */
+    app.get('/Folder/search',(req,res)=>{
+        let folderId = req.query.folderId;
+        let keyword = req.query.keyword;
+        Folder.findAll({
+            where: {}
+            ,
+            include: [ {model: File} ]
+        }).then( data=>{
+            console.log(data);
+
+        })
     });
 }

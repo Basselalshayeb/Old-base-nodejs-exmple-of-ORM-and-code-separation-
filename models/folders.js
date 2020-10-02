@@ -11,6 +11,7 @@ module.exports = function (sequelize) {
             type: DataTypes.STRING,
             allowNull: false
         }
+    
     }, {
         // Other model options go here
         sequelize, // We need to pass the connection instance
