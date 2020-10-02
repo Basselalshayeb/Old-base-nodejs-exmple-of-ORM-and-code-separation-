@@ -46,17 +46,17 @@ module.exports = function (app, User, Folder, File) {
             }).then(count => {
                 console.log(count);
                 // check files count
-                if(count ===0){
+                if (count === 0) {
                     // delete
                     Folder.destroy({
                         where: {
                             id: folderId
                         }
                     }).then(data => {
-                        res.send({ status: 'success'});
+                        res.send({ status: 'success' });
                     })
-                }else{
-                    res.send({status: 'failed', body: 'folder is not empty'});
+                } else {
+                    res.send({ status: 'failed', body: 'folder is not empty' });
                 }
                 /* */
             });
@@ -69,5 +69,11 @@ module.exports = function (app, User, Folder, File) {
         });
 
 
+    });
+
+    app.post('/Folder', (req, res) => {
+        // get folder data
+        let folderName = req.body.name;
+        console.log();
     });
 }
